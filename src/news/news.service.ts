@@ -20,6 +20,7 @@ export class NewsService {
     if (searchin) {
       apiUrl = apiUrl.concat(`&in=${searchin}`)
     }
+    apiUrl = encodeURI(apiUrl)
     console.log(apiUrl)
     const res = await fetch(apiUrl)
     const data = await res.json()

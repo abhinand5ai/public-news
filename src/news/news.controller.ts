@@ -5,15 +5,15 @@ import { ApiTags, ApiQuery, ApiResponse, ApiProduces, ApiOperation } from '@nest
 
 
 @Controller('news')
+@ApiTags('news')
 export class NewsController {
   constructor(private readonly newsService: NewsService) { }
 
   // Get N news articles
   @Get("search")
-  @ApiTags('news')
-  @ApiOperation({ summary: 'Get news articles based on keywords in title, description, content' })
+  @ApiOperation({ summary: 'Get fetching N news articles, finding a news article with a specific title or author, and searching by keywords' })
   @ApiProduces('application/json')
-  @ApiQuery({ name: 'q', required: true, description: 'Search keywords' })
+  @ApiQuery({ name: 'q', required: true, description: 'Search keywords. Query syntax can be found at https://gnews.io/docs/v4#query-syntax' })
   @ApiQuery({ name: 'max', 
   required: false, 
   type: Number,
@@ -24,8 +24,8 @@ export class NewsController {
  })
   @ApiQuery({
     name: 'in', required: false,
-    description: 'The fields to restrict your q search to.',
-    enum: ['title', 'description', 'content'],
+    description: "Search in specific fields. Possible values: title, description, content. Multiple values can be used by separating them with a comma.",
+    // enum: ['title', 'description', 'content'],
   })
   @ApiResponse({ status: 200, description: 'List of news articles' })
   @ApiResponse({ status: 400, description: 'Bad request' })
