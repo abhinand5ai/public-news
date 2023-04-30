@@ -35,6 +35,9 @@ export class NewsController {
 
   @Get("search/title")
   @ApiOperation({ summary: 'Fetches N news articles, finding a news articles searching by title' })
+  @ApiQuery({ name: 'q', required: true, description: 'This parameter allows you to specify your search keywords to find in the news titles  Query syntax can be found at https://gnews.io/docs/v4#query-syntax' })
+
+  @ApiQuery({ name: 'max', required: false, type: Number, description: 'This parameter allows you to specify the number of news articles returned by the API. The minimum value of this parameter is 1. The default and the maximum value is 10' })
   @ApiProduces('application/json')
   @ApiResponse({ status: 200, description: 'List of news articles' })
   @ApiResponse({ status: 400, description: 'Bad request' })
