@@ -13,16 +13,52 @@ export class NewsController {
   @Get("")
   @ApiOperation({ summary: 'Fetches N news articles' })
   @ApiProduces('application/json')
-  async getNews() {
-    const resp = await this.newsService.getNews();
+  @ApiQuery({ name: 'max', required: false, type: Number, description: 'This parameter allows you to specify the number of news articles returned by the API. The minimum value of this parameter is 1. The default and the maximum value is 10' })
+  @UseInterceptors(CacheInterceptor)
+  @CacheTTL(10000) // 10 seconds
+  @ApiResponse({ status: 200, description: 'List of news articles' })
+  @ApiResponse({ status: 400, description: 'Bad request' })
+  @ApiResponse({ status: 500, description: 'Internal Server Error' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  async getNews(@Query('max') limit: number,) {
+    const resp = await this.newsService.getNews(limit);
+    if(resp.status==200){
+      const data = await resp.json();
+      return data;
+    }else{
+      const data = await resp.json();
+      throw new HttpException(data, resp.status);
+    }
 
-    return resp.json();
+  }
 
+
+  @Get("search/title")
+  @ApiOperation({ summary: 'Fetches N news articles, finding a news articles searching by title' })
+  @ApiProduces('application/json')
+  @ApiResponse({ status: 200, description: 'List of news articles' })
+  @ApiResponse({ status: 400, description: 'Bad request' })
+  @ApiResponse({ status: 500, description: 'Internal Server Error' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @UseInterceptors(CacheInterceptor)
+  @CacheTTL(10000) // 10 seconds
+
+  async searchTitle(
+    @Query('q') q: string,
+    @Query('max') limit: number,
+  ) {
+    const resp = await this.newsService.search(q, limit, "title");
+    const data = await resp.json();
+    if (resp.status == 200) {
+      return data;
+    } else {
+      throw new HttpException(data, resp.status);
+    }
   }
 
   // Get N news articles
   @Get("search")
-  @ApiOperation({ summary: 'Fetches N news articles, finding a news article with a specific title or author, and searching by keywords' })
+  @ApiOperation({ summary: 'Fetches N news articles, finding a news articles searching by keywords' })
   @ApiProduces('application/json')
   @ApiQuery({ name: 'q', required: true, description: 'This parameter allows you to specify your search keywords to find the news articles you are looking for. The keywords will be used to return the most relevant articles. It is possible to use logical operators with keywords. Query syntax can be found at https://gnews.io/docs/v4#query-syntax' })
   @ApiQuery({
@@ -43,6 +79,7 @@ export class NewsController {
   @ApiResponse({ status: 400, description: 'Bad request' })
   @ApiResponse({ status: 500, description: 'Internal Server Error' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiQuery({ name: 'max', required: false, type: Number, description: 'This parameter allows you to specify the number of news articles returned by the API. The minimum value of this parameter is 1. The default and the maximum value is 10' })
   @UseInterceptors(CacheInterceptor)
   @CacheTTL(10000) // 10 seconds
   async search(
@@ -57,10 +94,8 @@ export class NewsController {
     } else {
       throw new HttpException(data, resp.status);
     }
-
-
   }
 
-  // Top headlines
+
 
 }

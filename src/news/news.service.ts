@@ -7,10 +7,13 @@ var count = 0;
 
 @Injectable()
 export class NewsService {
-  getNews() {
+  async getNews(limit: number) {
     const NEWS_API_KEY = this.configService.get<string>('NEWS_API_KEY');
-    const apiUrl = `https://gnews.io/api/v4/search?apikey=${NEWS_API_KEY}&q=example&lang=en&country=us`;
-    return fetch(apiUrl)
+    if(limit==undefined){
+      limit=10;
+    }
+    const apiUrl = `https://gnews.io/api/v4/search?apikey=${NEWS_API_KEY}&q=example&max=${limit}`;
+    return await fetch(apiUrl)
   }
   constructor(private readonly configService: ConfigService) { }
   async search(q: string, limit: number, searchin: string) {
