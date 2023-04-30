@@ -22,12 +22,15 @@ $ npm run build
 
 The application requires the news API key to successfully call the GNews api
 
+The key can be set in the environment variable `NEWS_API_KEY` before starting the application
+
 ```bash
 export NEWS_API_KEY="?????"
 ```
+
 Alternatively, the key can be set in the .env file in the root directory of the project
 ```bash
-NEWS_API_KEY="?????"
+NEWS_API_KEY=?????
 ```
 
 ```bash
