@@ -11,21 +11,21 @@ export class NewsController {
 
   // Get N news articles
   @Get("search")
-  @ApiOperation({ summary: 'Get fetching N news articles, finding a news article with a specific title or author, and searching by keywords' })
+  @ApiOperation({ summary: 'Fetches N news articles, finding a news article with a specific title or author, and searching by keywords' })
   @ApiProduces('application/json')
-  @ApiQuery({ name: 'q', required: true, description: 'Search keywords. Query syntax can be found at https://gnews.io/docs/v4#query-syntax' })
+  @ApiQuery({ name: 'q', required: true, description: 'This parameter allows you to specify your search keywords to find the news articles you are looking for. The keywords will be used to return the most relevant articles. It is possible to use logical operators with keywords. Query syntax can be found at https://gnews.io/docs/v4#query-syntax' })
   @ApiQuery({ name: 'max', 
   required: false, 
   type: Number,
 
-  description: 'Max number of articles to return',
+  description: 'This parameter allows you to specify the number of news articles returned by the API. The minimum value of this parameter is 1 and the maximum value is 10',
   
   
  })
   @ApiQuery({
     name: 'in', required: false,
-    description: "Search in specific fields. Possible values: title, description, content. Multiple values can be used by separating them with a comma.",
-    // enum: ['title', 'description', 'content'],
+    description: "This parameter allows you to choose in which attributes the keywords are searched. The attributes that can be set are title, description and content. It is possible to combine several attributes by separating them with a comma. e.g. title,description",
+
   })
   @ApiResponse({ status: 200, description: 'List of news articles' })
   @ApiResponse({ status: 400, description: 'Bad request' })
