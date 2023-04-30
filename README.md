@@ -11,6 +11,8 @@ Please note that the port number may be different depending on the port number s
 
 ## Installation
 
+Node version  `19.6.0` was used for development and testing of the application
+
 ```bash
 $ npm install
 $ npm run build
