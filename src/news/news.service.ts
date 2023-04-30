@@ -1,30 +1,41 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { Response } from 'express';
+
 
 var count = 0;
+
 @Injectable()
 export class NewsService {
-  constructor(private readonly configService: ConfigService) { }
-  async getNews( q: string, limit: number, searchin: string) {
+  getNews() {
     const NEWS_API_KEY = this.configService.get<string>('NEWS_API_KEY');
+    const apiUrl = `https://gnews.io/api/v4/search?apikey=${NEWS_API_KEY}&q=example&lang=en&country=us`;
+    return fetch(apiUrl)
+  }
+  constructor(private readonly configService: ConfigService) { }
+  async search(q: string, limit: number, searchin: string) {
+    const NEWS_API_KEY = this.configService.get<string>('NEWS_API_KEY')
     count++;
-    console.log(count)
     console.log(q, limit, searchin)
-    var apiUrl = `https://gnews.io/api/v4/search?apikey=${NEWS_API_KEY}`;
-    if (q) {
-      apiUrl = apiUrl.concat(`&q=${q}`)
+    var apiUrl = `https://gnews.io/api/v4/search?`;
+    const queryParams = {
+      apikey: NEWS_API_KEY,
+      q: q,
+      max: limit,
+      in: searchin
     }
-    if (limit) {
-      apiUrl = apiUrl.concat(`&limit=${limit}`)
+    const searchParams = new URLSearchParams()
+    for (const key in queryParams) {
+      if (queryParams[key] != undefined) {
+        searchParams.append(key, queryParams[key])
+      }
     }
-    if (searchin) {
-      apiUrl = apiUrl.concat(`&in=${searchin}`)
-    }
-    apiUrl = encodeURI(apiUrl)
-    console.log(apiUrl)
-    const res = await fetch(apiUrl)
-    const data = await res.json()
-    return data
+    apiUrl = apiUrl + searchParams.toString()
+    console.log(count, apiUrl)
+
+    // throw new Error("test");
+    const response = await fetch(apiUrl);
+    return response;
   }
 
 
