@@ -8,10 +8,12 @@ The API documentation can be viewed in a browser by visiting the url `http://{ho
 Please note that the port number may be different depending on the port number set in the environment variable `PORT` or the default port number `3000` if the environment variable is not set.
 
 
-## 
+## Installation
 
 ```bash
 $ npm install
+$ npm run build
+
 ```
 
 
